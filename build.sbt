@@ -11,9 +11,5 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
 		    "org.specs2" %% "specs2" % "2.2" % "test"
-                    , "com.typesafe" % "scalalogging-log4j_2.10" % "1.0.1"
 )
 
-fork in run := true
-
-connectInput in run := true
