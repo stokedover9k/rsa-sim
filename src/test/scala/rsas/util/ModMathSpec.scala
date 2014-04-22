@@ -71,7 +71,7 @@ class ModMathSpec extends Specification {
   }
 
   "ModMath" should {
-    "do addition mod n correctly" in new MathMod5 {
+    "correctly do addition mod n" in new MathMod5 {
       2 +% 2 mustEqual 4
       2 +% 3 mustEqual 0
       2 +% 4 mustEqual 1
@@ -79,7 +79,7 @@ class ModMathSpec extends Specification {
       2 +% (-3) mustEqual 4
     }
 
-    "do subtraction mod n correctly" in new MathMod5 {
+    "correctly do subtraction mod n" in new MathMod5 {
       2 -% 2 mustEqual 0
       2 -% 3 mustEqual 4
       3 -% 2 mustEqual 1
@@ -87,7 +87,7 @@ class ModMathSpec extends Specification {
       3 -% (-3) mustEqual 1
     }
 
-    "do multiplication mod n correctly" in new MathMod5 {
+    "correctly do multiplication mod n" in new MathMod5 {
       2 *% 2 mustEqual 4
       3 *% 3 mustEqual 4
       2 *% (-3) mustEqual 4

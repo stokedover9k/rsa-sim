@@ -11,5 +11,6 @@ resolvers ++= Seq(
 
 libraryDependencies ++= Seq(
 		    "org.specs2" %% "specs2" % "2.2" % "test"
+                    , "ch.qos.logback" % "logback-classic" % "1.0.1"
 )
 
