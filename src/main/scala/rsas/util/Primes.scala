@@ -2,14 +2,14 @@ package rsas.util
 
 import scala.util.Random
 import rsas.util.ModMath.ModVal
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
  * A collection of functions dealing with prime numbers.
  */
 object Primes {
 
-  def logger = LoggerFactory.getLogger("tracer")
+  private def defaultLogger = LoggerFactory.getLogger("math")
 
   /**
    * Generates a random number of numBits bits with the first and last of these
@@ -18,11 +18,16 @@ object Primes {
    * @param numBits Number of bits.
    * @return Pseudo-random number of numBits bits with 1's at either end.
    */
-  def primeCandidate(numBits: Int): Int = {
+  def primeCandidate(numBits: Int)
+                    (implicit logger: Logger = defaultLogger): Int = {
     if (numBits < 2)
       throw new IllegalArgumentException
 
-    def randomBit = Random.nextInt & 1
+    def randomBit = {
+      val x = Random.nextInt()
+      logger.trace(s"[line 97] random=$x bit=${x & 1}")
+      x & 1
+    }
 
     def loop(numBits: Int, num: Int): Int =
       if (numBits == 0)
@@ -33,7 +38,9 @@ object Primes {
     // - seed the loop with 1 which will become the left-most bit
     // - append numBits - 2 random bits
     // - append 1 as the right-most bit
-    (loop(numBits - 2, 1) << 1) | 1
+    val result = (loop(numBits - 2, 1) << 1) | 1
+    logger.trace(s"[line 97] result=$result")
+    result
   }
 
   /**
@@ -57,9 +64,11 @@ object Primes {
    *
    * @param a Number used to attempt to disprove that n is prime.
    * @param n Number to check for primality.
+   * @param logger Logger.
    * @return true if a does not disprove n's primality.
    */
-  def perhapsPrime(a: Int, n: Int): Boolean = {
+  def perhapsPrime(a: Int, n: Int)
+                  (implicit logger: Logger = defaultLogger): Boolean = {
     implicit val modVal = ModVal(n)
     implicit def Int2ModMath(n: Int) = ModMath(n)
 

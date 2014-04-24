@@ -5,8 +5,23 @@
             </pattern>
         </encoder>
     </appender>
- 
-    <root level="trace">
-        <appender-ref ref="STDOUT" />
+
+    <appender name="STD_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>rsa-sim.log</file>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <logger name="math" level="DEBUG">
+    </logger>
+
+    <logger name="math.trace" level="TRACE">
+    </logger>
+
+    <root>
+        <appender-ref ref="STD_FILE"/>
     </root>
 </configuration>
