@@ -1,7 +1,8 @@
 package rsas
 
 import org.slf4j.{Logger, LoggerFactory}
-import rsas.util.Primes
+import rsas.util.{ModMath, Primes}
+import rsas.util.ModMath.ModVal
 
 object RSASim {
 
@@ -79,6 +80,36 @@ object RSASim {
       q
   }
 
+  def findPublicPrivateKeyPair(phiN: Int): (Int, Int) = {
+
+    def loop(e: Int): Option[(Int, Int)] = {
+      if (e == phiN)
+        None
+      else
+        Primes.extendedEuclidGCD(phiN, e)(tracer) match {
+          case (1, s, t) => {
+            tracer.trace(s"[line 133] public key e=$e accepted")
+            tracer.trace(s"(gcd, s, t)=${(1, s, t)}")
+            val d = ModMath(t)(ModVal(phiN)).num
+            Some(e, d)
+          }
+          case _ => {
+            tracer.trace(s"[line 133] public key e=$e rejected")
+            loop(e + 1)
+          }
+        }
+    }
+
+    loop(3) match {
+      case None => throw new IllegalStateException(
+        s"could not find a key pair for phi=$phiN")
+      case Some((e, d)) => {
+        tracer.trace(s"[line 143] private key d=$d")
+        (e, d)
+      }
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     // Trace generation of a random potential prime
     Primes.primeCandidate(k)(tracer)
@@ -95,6 +126,9 @@ object RSASim {
     val n = p * q
     val phiN = (p - 1) * (q - 1)
 
+    tracer.trace(s"n=$n phi(n)=$phiN")
+
+    val keyPair = findPublicPrivateKeyPair(phiN)
 
   }
 }
