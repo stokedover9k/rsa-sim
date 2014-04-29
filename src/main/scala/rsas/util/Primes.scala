@@ -93,4 +93,51 @@ object Primes {
     val k = numberOfSignificantBits(x) - 1
     loop(k, 1) == 1
   }
+
+  /**
+   * Runs the Extended Euclidean algorithm to get the greatest common divisor
+   * (GCD) of two numbers A and B as well as s and t such that GCD = sA + tB.
+   * @param a A > 0
+   * @param b B > 0
+   * @return Triple of the form (GCD, s, t).
+   * @throws IllegalArgumentException if a or b are <= 0.
+   */
+  def extendedEuclidGCD(a: Int, b: Int): (Int, Int, Int) = {
+
+    if (a <= 0 || b <= 0)
+      throw new IllegalArgumentException
+
+    def loop(i: Int, qi1: Int, qi2: Int, ri: Int, ri1: Int,
+             si1: Int, si2: Int, ti1: Int, ti2: Int)
+            (implicit logger: Logger = defaultLogger): (Int, Int, Int) = {
+
+      val si = i match {
+        case 1 => 1
+        case 2 => 0
+        case _ => si2 - qi2 * si1
+      }
+
+      val ti = i match {
+        case 1 => 0
+        case 2 => 1
+        case _ => ti2 - qi2 * ti1
+      }
+
+      if (ri1 == 0)
+        (ri, si, ti)
+      else {
+        val qi = ri / ri1
+        val ri2 = ri % ri1
+
+        logger.trace(f"i=$i%-4d  q(i)=$qi%5d  r(i)=${
+          ri}%5d  r(i+1)=$ri1%5d  r(i+2)=$ri2%5d  s(i)=$si%5d  t(i)=$ti%5d")
+
+        loop(i = i + 1, qi1 = qi, qi2 = qi1, ri = ri1, ri1 = ri2,
+          si1 = si, si2 = si1, ti1 = ti, ti2 = ti1)(logger)
+      }
+    }
+
+    loop(i = 1, qi1 = 0, qi2 = 0, ri = Math.max(a, b), ri1 = Math.min(a, b),
+      si1 = 0, si2 = 0, ti1 = 0, ti2 = 0)
+  }
 }

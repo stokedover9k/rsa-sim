@@ -59,4 +59,22 @@ class PrimesSpec extends Specification {
       Primes.numberOfSignificantBits(0x17) mustEqual 5
     }
   }
+
+  "Primes.extendedEuclideanGCD" should {
+
+    "compute correct gcd" in {
+      Primes.extendedEuclidGCD(75, 28) mustEqual(1, 3, -8)
+    }
+
+    "compute correctly when A and B are reversed" in {
+      Primes.extendedEuclidGCD(75, 28) mustEqual Primes.
+        extendedEuclidGCD(28, 75)
+    }
+
+    "work when A and B are not relatively prime" in {
+      Primes.extendedEuclidGCD(10, 8) match {
+        case (gcd, s, t) => gcd mustEqual 2
+      }
+    }
+  }
 }
