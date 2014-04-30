@@ -126,13 +126,13 @@ object Primes {
       }
 
       if (ri1 == 0) {
-        logger.trace(f"i=$i%-4d  ${""}%10s  r(i)=$ri%-5d  r(i+1)=$ri1%-5d  ${""}%12s  s(i)=$si%-5d  t(i)=$ti%-5d")
+        logger.trace(f"[line 133] i=$i%-4d  ${""}%10s  r(i)=$ri%-5d  r(i+1)=$ri1%-5d  ${""}%12s  s(i)=$si%-5d  t(i)=$ti%-5d")
         (ri, si, ti)
       } else {
         val qi = ri / ri1
         val ri2 = ri % ri1
 
-        logger.trace(f"i=$i%-4d  q(i)=$qi%-5d  r(i)=$ri%-5d  r(i+1)=$ri1%-5d  r(i+2)=$ri2%-5d  s(i)=$si%-5d  t(i)=$ti%-5d")
+        logger.trace(f"[line 133] i=$i%-4d  q(i)=$qi%-5d  r(i)=$ri%-5d  r(i+1)=$ri1%-5d  r(i+2)=$ri2%-5d  s(i)=$si%-5d  t(i)=$ti%-5d")
 
         loop(i = i + 1, qi1 = qi, qi2 = qi1, ri = ri1, ri1 = ri2,
           si1 = si, si2 = si1, ti1 = ti, ti2 = ti1)(logger)

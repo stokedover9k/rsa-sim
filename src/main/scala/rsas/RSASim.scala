@@ -83,13 +83,13 @@ object RSASim {
   def findPublicPrivateKeyPair(phiN: Int): (Int, Int) = {
 
     def loop(e: Int): Option[(Int, Int)] = {
+      tracer.trace(s"[line 133] proposed public key e=$e")
       if (e == phiN)
         None
       else
         Primes.extendedEuclidGCD(phiN, e)(tracer) match {
           case (1, s, t) => {
             tracer.trace(s"[line 133] public key e=$e accepted")
-            tracer.trace(s"(gcd, s, t)=${(1, s, t)}")
             val d = ModMath(t)(ModVal(phiN)).num
             Some(e, d)
           }
@@ -128,7 +128,8 @@ object RSASim {
 
     tracer.trace(s"n=$n phi(n)=$phiN")
 
-    val keyPair = findPublicPrivateKeyPair(phiN)
+    val (e, d) = findPublicPrivateKeyPair(phiN)
 
+    tracer.trace(s"[line 147] p=$p(${p.toBinaryString}) q=$q(${q.toBinaryString}) n=$n(${n.toBinaryString}) e=$e(${e.toBinaryString}) d=$d(${d.toBinaryString})")
   }
 }
