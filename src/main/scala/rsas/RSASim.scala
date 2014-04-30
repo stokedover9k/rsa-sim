@@ -131,5 +131,9 @@ object RSASim {
     val (e, d) = findPublicPrivateKeyPair(phiN)
 
     tracer.trace(s"[line 147] p=$p(${p.toBinaryString}) q=$q(${q.toBinaryString}) n=$n(${n.toBinaryString}) e=$e(${e.toBinaryString}) d=$d(${d.toBinaryString})")
+
+    val cert = Certificate("Alice", n, e)
+    tracer.trace(cert.toString)
+    tracer.trace(s"${cert.getName} ${cert.getN} ${cert.getE}")
   }
 }
