@@ -23,12 +23,12 @@ package object rsas {
     String.format("%8s", (byte & 0xff).toBinaryString).replace(' ', '0')
 
   /**
-   * Convert an integer into a bit string padded with zeroes to length 32.
+   * Convert an integer into a bit string with space separated bytes.
    * @param int Integer to convert.
    * @return String of characters 0 and 1.
    */
-  def int2PaddedBitString(int: Int): String =
-    String.format("%32s", int.toBinaryString).replace(' ', '0')
+  def int2BitString(int: Int): String =
+    bytes2BitString(int2Bytes(int))
 
   /**
    * Converts a sequence of bytes into space separated bit strings.

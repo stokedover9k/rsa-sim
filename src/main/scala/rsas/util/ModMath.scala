@@ -74,6 +74,9 @@ class ModMath private(val num: Int) {
  */
 object ModMath {
 
+  implicit def int2ModMath(int: Int)(implicit mod: ModVal): ModMath =
+    apply(int)(mod)
+
   /**
    * Modulus value.
    *

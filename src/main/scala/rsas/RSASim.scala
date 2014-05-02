@@ -130,7 +130,11 @@ object RSASim {
 
     val (e, d) = findPublicPrivateKeyPair(phiN)
 
-    tracer.trace(s"[line 147] p=$p(${p.toBinaryString}) q=$q(${q.toBinaryString}) n=$n(${n.toBinaryString}) e=$e(${e.toBinaryString}) d=$d(${d.toBinaryString})")
+    tracer.trace(s"[line 147] p=(${int2BitString(p)})=$p")
+    tracer.trace(s"[line 147] q=(${int2BitString(q)})=$q")
+    tracer.trace(s"[line 147] n=(${int2BitString(n)})=$n")
+    tracer.trace(s"[line 147] e=(${int2BitString(e)})=$e")
+    tracer.trace(s"[line 147] d=(${int2BitString(d)})=$d")
 
     KeyPair(n = n, e = e, d = d)
   }
@@ -149,6 +153,23 @@ object RSASim {
 
     tracer.trace(s"[line 177] Alice's certificate hash:   ${bytes2Int(trent.hash(certificateAlice.data.bytes))}")
     tracer.trace(s"[line 177] Trent's signature on Alice: ${bytes2Int(certificateAlice.signature)}")
+
+    // Since prime candidate sets the 1st and the kth (from the right) bits to
+    // 1, we can use it to create Bob's u if we discard the 1st (least
+    // significant) bit.
+    // Called k1 because k1 = k + 1 where k is as described in instructions,
+    // the index (0-indexed) of the last 1-bit (from right/least significant).
+    val k1 = numberOfSignificantBits(alice.n)
+    val u = Primes.primeCandidate(k1) >> 1
+
+    tracer.trace(s"[line 195] k=${k1 - 1} u=$u")
+    tracer.trace(s"[line 197] u = ${int2BitString(u)}")
+
+    // these bytes are sent to alice to sign
+    val uData = int2Bytes(u)
+
+    // these bytes are returned by alice to bob
+    val vData = alice.auth.getSigned(uData)
 
 
   }
