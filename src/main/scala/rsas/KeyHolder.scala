@@ -11,6 +11,8 @@ import rsas.util.ModMath.ModVal
 abstract case class KeyHolder private(name: Certificate.Name, n: Int, e: Int)
   extends Attestant[Certificate, Seq[Byte]] {
 
+  private implicit val mod = ModVal(n)
+
   /**
    * Certificate of the Key Holder.
    */
@@ -22,6 +24,17 @@ abstract case class KeyHolder private(name: Certificate.Name, n: Int, e: Int)
    * @return Attestant for authentication.
    */
   def auth: Attestant[Seq[Byte], Seq[Byte]]
+
+  /**
+   * Encrypt a single message (4 bytes) by raising them to the public exponent.
+   * @param bytes Bytes to encrypt.
+   * @return Encrypted message.
+   */
+  def encryptMessage(bytes: Seq[Byte]): Seq[Byte] = {
+    val msg: ModMath = bytes2Int(bytes)
+    val encrypted = msg **% e
+    int2Bytes(encrypted)
+  }
 }
 
 /**
@@ -70,9 +83,7 @@ object KeyHolder {
       def auth: Attestant[Seq[Byte], Seq[Byte]] =
         new Attestant[Seq[Byte], Seq[Byte]] {
           def getSignature(data: Seq[Byte]): Seq[Byte] = {
-            implicit val mod = ModVal(n)
-            import ModMath.int2ModMath
-            val hashed = bytes2Int(hash(data))
+            val hashed: ModMath = bytes2Int(hash(data))
             int2Bytes(hashed **% d)
           }
 

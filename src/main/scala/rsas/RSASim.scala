@@ -169,8 +169,14 @@ object RSASim {
     val uData = int2Bytes(u)
 
     // these bytes are returned by alice to bob
-    val vData = alice.auth.getSigned(uData)
+    val vData = alice.auth.getSigned(uData).data
 
+    val vEncrypted = alice.encryptMessage(vData)
+    val uHashed = alice.hash(uData)
 
+    tracer.trace(s"[line 204] u    = ${int2BitString(u)} = $u")
+    tracer.trace(s"[line 204] h(u) = ${bytes2BitString(uHashed)} = ${bytes2Int(uHashed)}")
+    tracer.trace(s"[line 204] v    = ${bytes2BitString(vData)} = ${bytes2Int(vData)}")
+    tracer.trace(s"[line 204] E(v) = ${bytes2BitString(vEncrypted)} = ${bytes2Int(vEncrypted)}")
   }
 }
