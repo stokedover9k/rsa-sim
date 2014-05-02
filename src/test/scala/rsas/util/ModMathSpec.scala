@@ -92,5 +92,12 @@ class ModMathSpec extends Specification {
       3 *% 3 mustEqual 4
       2 *% (-3) mustEqual 4
     }
+
+    "correctly do fast exponentiation mod n" in new MathMod5 {
+      2 **% 15 mustEqual Math.pow(2, 15).toInt % mod.mod
+      3 **% 17 mustEqual Math.pow(3, 17).toInt % mod.mod
+      5 **% 11 mustEqual Math.pow(5, 11).toInt % mod.mod
+      3 **% -3 must throwA[IllegalArgumentException]
+    }
   }
 }

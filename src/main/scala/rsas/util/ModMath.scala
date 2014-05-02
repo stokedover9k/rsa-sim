@@ -40,6 +40,31 @@ class ModMath private(val num: Int) {
    */
   def *%(rightFactor: Int)(implicit n: ModVal): Int =
     ModMath.mod(num * rightFactor, n.mod)
+
+  /**
+   * Fast exponentiation modulo n: this to the positive power p modulo n.
+   * @param p Power to raise this to.
+   * @param n Modulus.
+   * @return This to power p.
+   * @throws IllegalArgumentException if p < 0
+   */
+  def **%(p: Int)(implicit n: ModVal): Int = {
+    if (p < 0)
+      throw new IllegalArgumentException
+
+    implicit def Int2ModMath(i: Int): ModMath = ModMath(i)
+
+    def loop(i: Int, y: Int): Int = i match {
+      case -1 => y
+      case _ =>
+        if ((p & (1 << i)) == 0)
+          loop(i - 1, y *% y)
+        else
+          loop(i - 1, y *% y *% num)
+    }
+
+    loop(Primes.numberOfSignificantBits(p) - 1, 1)
+  }
 }
 
 /**
