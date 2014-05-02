@@ -56,4 +56,12 @@ trait Attestant[D, S] {
 
       def signature: S = getSignature(dataToSign)
     }
+
+  /**
+   * Hash function used by this attestant.
+   * @param bytes Data to hash.
+   * @return Resulting hash.
+   */
+  def hash(bytes: Seq[Byte]): Seq[Byte]
+
 }

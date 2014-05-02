@@ -2,6 +2,7 @@ package rsas.util
 
 import scala.util.Random
 import rsas.util.ModMath.ModVal
+import rsas.numberOfSignificantBits
 import org.slf4j.{Logger, LoggerFactory}
 
 /**
@@ -41,22 +42,6 @@ object Primes {
     val result = (loop(numBits - 2, 1) << 1) | 1
     logger.trace(s"[line 97] result=$result")
     result
-  }
-
-  /**
-   * Returns the number of bits after all leading zeros of n.
-   *
-   * @param n Number to get number of significant bits for.
-   * @return Number of significant bits in n.
-   */
-  def numberOfSignificantBits(n: Int): Int = {
-    def loop(x: Int, count: Int): Int =
-      if (x == 0)
-        count
-      else
-        loop(x >> 1, count + 1)
-
-    loop(n, 0)
   }
 
   /**

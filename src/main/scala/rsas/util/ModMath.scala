@@ -1,5 +1,7 @@
 package rsas.util
 
+import rsas.numberOfSignificantBits
+
 /**
  * A wrapper for integers to allow operations with a modulus.
  *
@@ -63,7 +65,7 @@ class ModMath private(val num: Int) {
           loop(i - 1, y *% y *% num)
     }
 
-    loop(Primes.numberOfSignificantBits(p) - 1, 1)
+    loop(numberOfSignificantBits(p) - 1, 1)
   }
 }
 

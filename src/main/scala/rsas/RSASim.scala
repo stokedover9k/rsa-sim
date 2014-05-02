@@ -110,7 +110,7 @@ object RSASim {
     }
   }
 
-  def main(args: Array[String]): Unit = {
+  def generateKeyPair(implicit tracer: Logger): KeyPair = {
     // Trace generation of a random potential prime
     Primes.primeCandidate(k)(tracer)
 
@@ -132,8 +132,24 @@ object RSASim {
 
     tracer.trace(s"[line 147] p=$p(${p.toBinaryString}) q=$q(${q.toBinaryString}) n=$n(${n.toBinaryString}) e=$e(${e.toBinaryString}) d=$d(${d.toBinaryString})")
 
-    val cert = Certificate("Alice", n, e)
-    tracer.trace(cert.toString)
-    tracer.trace(s"${cert.getName} ${cert.getN} ${cert.getE}")
+    KeyPair(n = n, e = e, d = d)
+  }
+
+  def main(args: Array[String]): Unit = {
+
+    // only tracing for Alice
+    val alice = KeyHolder("Alice", generateKeyPair(tracer))
+    val trent = KeyHolder("Trent", generateKeyPair(logger))
+
+    val certificateAlice = trent.getSigned(alice.certificate)
+
+    tracer.trace(s"[line 175] Alice's certificate:        ${bytes2BitString(certificateAlice.data.bytes)}")
+    tracer.trace(s"[line 175] Alice's certificate hash:   ${bytes2BitString(trent.hash(certificateAlice.data.bytes))}")
+    tracer.trace(s"[line 175] Trent's signature on Alice: ${bytes2BitString(certificateAlice.signature)}")
+
+    tracer.trace(s"[line 177] Alice's certificate hash:   ${bytes2Int(trent.hash(certificateAlice.data.bytes))}")
+    tracer.trace(s"[line 177] Trent's signature on Alice: ${bytes2Int(certificateAlice.signature)}")
+
+
   }
 }

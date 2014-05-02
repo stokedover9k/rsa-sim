@@ -92,12 +92,7 @@ object Certificate {
   private val nameFormatter: Seq[Byte] => Name =
     bytes => Name.valueOf(stringFormatter(bytes))
 
-  private val intFormatter: Seq[Byte] => Int = bytes =>
-    if (bytes.length != 4)
-      throw new IllegalArgumentException
-    else
-      ((bytes(0) & 0xff) << 24) + ((bytes(1) & 0xff) << 16) +
-        ((bytes(2) & 0xff) << 8) + (bytes(3) & 0xff)
+  private val intFormatter: Seq[Byte] => Int = bytes2Int
 
   /**
    * Create a certificate object.
@@ -107,14 +102,10 @@ object Certificate {
    * @return New certificate with specified fields.
    */
   def apply(name: Name, n: Int, e: Int): Certificate = {
-    def intToBytes(n: Int): Seq[Byte] =
-      Seq(((n >> 24) & 0xff).toByte, ((n >> 16) & 0xff).toByte,
-        ((n >> 8) & 0xff).toByte, (n & 0xff).toByte)
-
     def nameBytes = name.string.toCharArray.map(_.toByte).
       padTo(BYTE_LENGTH_OF_NAME, 0.toByte)
-    def nBytes = intToBytes(n)
-    def eBytes = intToBytes(e)
+    def nBytes = int2Bytes(n)
+    def eBytes = int2Bytes(e)
 
     val bytes = nameBytes ++ nBytes ++ eBytes
 
@@ -129,7 +120,7 @@ object Certificate {
    * [[rsas.Certificate.BYTE_LENGTH_OF_NAME]] characters long.
    * @param string Underlying string.
    */
-  case class Name (string: String) {
+  case class Name(string: String) {
     require(string.length == BYTE_LENGTH_OF_NAME, "invalid name length")
   }
 
