@@ -1,6 +1,7 @@
 package rsas.util
 
 import org.specs2.mutable.Specification
+import rsas.numberOfSignificantBits
 
 class PrimesSpec extends Specification {
 
@@ -41,22 +42,22 @@ class PrimesSpec extends Specification {
     }
   }
 
-  "Primes.numberOfSignificantBits" should {
+  "numberOfSignificantBits" should {
 
     "compute correct for x = 0" in {
-      Primes.numberOfSignificantBits(0) mustEqual 0
+      numberOfSignificantBits(0) mustEqual 0
     }
 
     "compute correct for x = 1" in {
-      Primes.numberOfSignificantBits(1) mustEqual 1
+      numberOfSignificantBits(1) mustEqual 1
     }
 
     "compute correct for x = 16" in {
-      Primes.numberOfSignificantBits(0x10) mustEqual 5
+      numberOfSignificantBits(0x10) mustEqual 5
     }
 
     "compute correct for some other values" in {
-      Primes.numberOfSignificantBits(0x17) mustEqual 5
+      numberOfSignificantBits(0x17) mustEqual 5
     }
   }
 
