@@ -2,6 +2,7 @@ package rsas
 
 import rsas.util.ModMath
 import rsas.util.ModMath.ModVal
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
  * Key Holder who can sign [[rsas.Certificate]] objects.
@@ -30,7 +31,8 @@ abstract case class KeyHolder private(name: Certificate.Name, n: Int, e: Int)
    * @param bytes Bytes to encrypt.
    * @return Encrypted message.
    */
-  def encryptMessage(bytes: Seq[Byte]): Seq[Byte] = {
+  def encryptMessage(bytes: Seq[Byte])
+                    (implicit logger: Logger = KeyHolder.defaultLogger): Seq[Byte] = {
     val msg: ModMath = bytes2Int(bytes)
     val encrypted = msg **% e
     int2Bytes(encrypted)
@@ -42,6 +44,8 @@ abstract case class KeyHolder private(name: Certificate.Name, n: Int, e: Int)
  * Provides a factory for discrete creation of Trent holding a private key.
  */
 object KeyHolder {
+
+  private def defaultLogger = LoggerFactory.getLogger("math")
 
   /**
    * Simple hash taking the exclusive-or of the bytes.
