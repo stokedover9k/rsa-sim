@@ -1,0 +1,9 @@
+RSA Simulation
+--------------
+
+This project is managed and built by SBT.
+
+To run SBT, execute the provided script sbt.sh. It will download SBT if it hasn't already and start it.
+SBT will then download the Scala language and project dependencies.
+
+Once that's done, execute "run" at the SBT prompt to run the RSA simulation.
