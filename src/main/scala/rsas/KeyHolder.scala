@@ -53,7 +53,7 @@ object KeyHolder {
    * @return Hash of the bytes.
    */
   private def hashInt(bytes: Seq[Byte]): Int =
-    bytes.foldLeft(0)(_ ^ _.toInt)
+    bytes.foldLeft(0)((a, b) => (a & 0xff) ^ (b & 0xff))
 
   /**
    * Common key holder hash.
